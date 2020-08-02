@@ -1,0 +1,44 @@
+/*Query 1 - query used for first Insight*/ 
+SELECT i.BillingCountry Country, COUNT(g.Name) JazzTracks
+FROM Invoice i
+JOIN InvoiceLine il
+ON i.InvoiceId = il.InvoiceId
+JOIN Track t
+ON t.TrackId = il.TrackId 
+JOIN Genre g
+ON g.GenreId = t.GenreId 
+WHERE g.Name = "Jazz"
+GROUP BY Country
+ORDER BY JazzTracks DESC;
+
+/*Query 2 - query used for second Insight*/ 
+SELECT Genre.Name, COUNT(Track.TrackId) as Quantity FROM Track
+INNER JOIN Genre
+ON Track.GenreId = Genre.GenreId
+INNER JOIN InvoiceLine 
+ON Track.TrackId = InvoiceLine.TrackId
+INNER JOIN Invoice
+ON InvoiceLine.InvoiceId = Invoice.InvoiceId
+WHERE Invoice.BillingCountry = 'Germany'
+GROUP BY Genre.GenreId
+ORDER BY Quantity DESC 
+LIMIT 10;
+
+/*Query 3 - query used for third Insight*/ 
+SELECT cx.firstName || " " || cx.lastName as FullName, cx.Country, SUM(i.Total) TotalPurchase
+FROM Invoice i
+JOIN Customer cx on cx.customerId= i.customerId
+GROUP BY FullName, cx.lastname
+ORDER BY TotalPurchase DESC
+LIMIT 10;
+
+/*Query 4 - query used for fourth Insight*/ 
+SELECT Genre.Name, COUNT(Track.TrackId) FROM Track 
+INNER JOIN Genre 
+ON Track.GenreId = Genre.GenreId
+AND Genre.Name != "TV Shows" 
+AND Genre.Name != "Comedy" 
+AND Genre.Name != "Science Fiction"
+AND Genre.Name != "Sci Fi & Fantasy"
+GROUP BY Genre.GenreId 
+ORDER BY COUNT(Track.TrackId) DESC;
